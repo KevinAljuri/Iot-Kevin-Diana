@@ -9,7 +9,7 @@ Sistema IoT desarrollado con una ESP32 para contar las entradas y salidas de per
 
 ## 2. Diagrama de arquitectura
 
-![Diagrama de arquitectura](imagenes/DiagramaArquitectura.jpg)
+![Diagrama de arquitectura](imagenes/diagrama.jpg)
 
 La ESP32 recibe información de los sensores y publica los datos en Adafruit IO mediante Wi-Fi y MQTT. El dashboard permite visualizar las mediciones y controlar el LED rojo y el buzzer.
 
