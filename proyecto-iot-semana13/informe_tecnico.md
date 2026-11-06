@@ -52,10 +52,10 @@ Se creó un widget *Line Chart* asociado al feed `luminosidad` y el sistema func
 ## 4. Análisis de tendencia (Actividad 3.2)
 
 **¿La luminosidad se mantuvo estable o presentó picos?**
-No se mantuvo estable. La gráfica muestra **picos marcados** sobre una línea base cercana a 0. Hubo picos de aproximadamente 3.300 a 3.500, cuando se descubrió el sensor o se le acercó luz, y un pico cercano a 2.800 hacia la 1:00 p. m. Entre ellos hubo tramos intermedios de alrededor de 1.000. La variación depende de los cambios de iluminación provocados durante las pruebas (cubrir y descubrir el LDR).
+No se mantuvo estable. La gráfica muestra **picos marcados** sobre una línea base cercana a 0. Hubo picos de entre 3.300 a 3.500, se le acercó luz, o algunos datos de 900 a 1200. La variación se deben a las pruebas que se realizaron para que el Adafruit y el IFTTT reaccionaran al cambio.
 
 **¿En qué momento del día se detectó el valor más bajo?**
-El valor más bajo, cercano a 0, se registró en la **mañana y a mediodía**: se mantuvo de forma sostenida desde aproximadamente las **11:30 a. m. hasta las 12:15 p. m.** del 5 de noviembre, con el sensor cubierto o en sombra. Ese rango está por debajo del umbral de 100 y es el que debe disparar la alerta.
+El valor más bajo, cercano a 0, se registró en la **mañana y a mediodía**: se mantuvo de forma sostenida desde aproximadamente las **11:30 a. m. hasta las 12:15 p. m.**, con el sensor cubierto. Ese rango está por debajo del umbral de 100 y es el que debe disparar la alerta.
 
 ---
 
@@ -85,7 +85,8 @@ El umbral de personas es 4 porque el aforo máximo definido en el código es 5. 
 
 ### 5.3 Applet de humedad por correo
 
-El trigger usa el feed `humedad` con la condición **Greater than 60**. La acción es un **correo electrónico** con el valor actual. Se escogió el correo porque es más fiable que la notificación push de la app para alertas importantes (`extra/CorreoPush.jpeg`, `extra/lecturaCorreo.jpeg`).
+El trigger usa el feed `humedad` con la condición **Greater than 60**. La acción es un **correo electrónico** con el valor actual. Se escogió el correo porque es más fiable que la notificación push de la app para alertas importantes![Correo Push](extra/CorreoPush.jpeg)
+![Lectura de Correo](extra/lecturaCorreo.jpeg)).
 
 ### 5.4 Prueba de la alerta
 
@@ -102,28 +103,13 @@ IFTTT evita programar y mantener en el ESP32 un cliente SMTP con credenciales de
 IFTTT evalúa la condición cada vez que llega un dato nuevo al feed. Si se publica muy poco, el applet puede no ver nunca el valor crítico, ya que una lectura baja puede pasar entre dos publicaciones. Si se publica demasiado seguido, se supera el límite de datos por minuto de Adafruit IO y se genera una cantidad excesiva de notificaciones repetidas (una por cada dato que cumpla la condición). Con 15 s se equilibran ambas cosas y se deja margen para las publicaciones de los otros sensores.
 
 **3. ¿Qué otras acciones (That) podrían configurarse en IFTTT además de la notificación push?**
-Envío de correo electrónico (ya implementado para la humedad), mensajes a Telegram o Slack, registro de eventos en una hoja de Google Sheets para llevar un historial, activación de dispositivos inteligentes (luces o enchufes), llamadas webhook a otro sistema y SMS. En este proyecto servirían para avisar a varias personas a la vez, llevar un registro de incidentes de aforo y temperatura, y activar un ventilador o las luces de forma automática.
+Envío de correo electrónico, mensajes a Telegram o Slack, registro de eventos en una hoja de Google Sheets para llevar un historial, activación de dispositivos inteligentes (luces o enchufes), llamadas webhook a otro sistema y SMS. En este proyecto servirían para avisar a varias personas a la vez, llevar un registro de incidentes de aforo y temperatura, y activar un ventilador o las luces de forma automática.
 
 **4. ¿Qué limitaciones encontró al usar la versión gratuita de Adafruit IO?**
-El plan gratuito tiene retención limitada del histórico (30 días), un límite de datos por minuto, y un número limitado de feeds y dashboards. Por eso el código separa las publicaciones con pausas de 500 ms. En cuanto a IFTTT, la limitación más visible fue el retraso: las notificaciones llegaron agrupadas, mucho después de que los datos estuvieran en el feed.
-
----
-
-## 7. Cumplimiento de los criterios de éxito
-
-| Criterio | Estado | Evidencia |
-|---|---|---|
-| El ESP32 publica datos de luminosidad en Adafruit IO de forma estable | Cumplido | Dashboard (Figura 1) y feed `luminosidad` |
-| Se visualiza un histórico en el dashboard | Cumplido | Gráfico histórico (Figura 2) |
-| El applet de IFTTT dispara una notificación push con luminosidad < 100 | Cumplido | Applet (Figura 3) y notificación (Figura 4) |
-| El repositorio contiene las evidencias y el código comentado | Cumplido | `README.md`, `codigo/`, `evidencias/` y `extra/` |
-| El informe responde a las preguntas de reflexión | Cumplido | Sección 6 |
+El plan gratuito tiene retención limitada del histórico (30 días), un límite de datos por minuto, y un número limitado de feeds y dashboards. Por eso el código separa las publicaciones con pausas de 500 ms. 
 
 ---
 
 ## 8. Conclusiones
 
-- El flujo **Sensor → ESP32 → Adafruit IO → IFTTT → Notificación push** funciona de punta a punta y se validó con las pruebas de luminosidad, temperatura, personas y humedad.
-- La automatización permite que el coordinador no tenga que vigilar el dashboard: el sistema avisa cuando hay una anomalía.
-- El principal límite encontrado no es del hardware, sino del plan gratuito de IFTTT, cuyo trigger por *polling* agrupa y retrasa las notificaciones.
-- Para alertas críticas conviene complementar el push con correo, y como mejora futura, usar un servicio de notificación en tiempo real (Telegram o webhooks) y calibrar el LDR para obtener valores reales en lux.
+Se validó con éxito el flujo completo desde el sensor y el ESP32 hasta Adafruit IO, IFTTT y la notificación push mediante pruebas de luminosidad, temperatura, personas y humedad. Esta automatización optimiza la gestión al liberar al coordinador de la vigilancia constante del dashboard, ya que el sistema avisa automáticamente ante cualquier anomalía. No obstante, se identificó que la principal limitación no radica en el hardware, sino en las restricciones del plan gratuito de IFTTT, cuyo método de polling agrupa y retrasa las alertas. Por lo tanto, para notificaciones críticas se recomienda complementar el push con avisos por correo electrónico, y como mejoras futuras, implementar servicios en tiempo real como Telegram o webhooks, además de calibrar el LDR para registrar valores reales en lux.
