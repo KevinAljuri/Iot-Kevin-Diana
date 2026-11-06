@@ -120,7 +120,7 @@ Además del taller de luminosidad se implementó el sistema completo:
 
 | Applet | Condición |
 |---|---|
-| Luminosidad | menor que 500 (primera prueba) / menor que 100 (taller) |
+| Luminosidad | menor que 100 (taller) |
 | Temperatura | mayor que 35.0 |
 | Personas | mayor que 4 |
 
