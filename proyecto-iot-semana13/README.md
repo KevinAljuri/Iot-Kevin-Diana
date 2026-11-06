@@ -1,4 +1,5 @@
-# Sistema IoT para el control de aula (Grupo B192) Internet de las cosas.
+# Sistema IoT para el control de aula (Grupo B192) 
+Internet de las cosas.
 
 **Autores:** Kevin Aljuri y Diana Beltrán
 **Actividad:** Proyecto IoT – Semana 13 (ESP32 + Adafruit IO + IFTTT)
