@@ -124,7 +124,7 @@ Además del taller de luminosidad se implementó el sistema completo:
 | Temperatura | mayor que 35.0 |
 | Personas | mayor que 4 |
 
-![Applets](evidencias/extras/Applets.jpeg)
+![Applets](extras/Applets.jpeg)
 
 Los pasos para crearlos están en `informe_tecnico.md`.
 
@@ -139,8 +139,8 @@ Además de las notificaciones push, se configuró un applet que avisa **por corr
 
 | Evidencia | Imagen |
 |---|---|
-| Correo recibido | ![Correo recibido](evidencias/extras/CorreoPush.jpeg) |
-| Lectura del correo | ![Lectura del correo](evidencias/extras/lecturaCorreo.jpeg) |
+| Correo recibido | ![Correo recibido](extras/CorreoPush.jpeg) |
+| Lectura del correo | ![Lectura del correo](extras/lecturaCorreo.jpeg) |
 
 ---
 
