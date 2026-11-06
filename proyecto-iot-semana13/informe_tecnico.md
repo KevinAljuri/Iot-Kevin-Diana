@@ -31,7 +31,7 @@ Se crearon los feeds `luminosidad`, `temperatura`, `humedad`, `personas`, `led-r
 
 ### 3.3 Código
 
-El código (`codigo/esp32_luminosidad.ino`) cumple lo siguiente:
+El código [`codigo/esp32_luminosidad.ino`](codigo/esp32_luminosidad.ino) cumple lo siguiente:
 
 - Publica luminosidad, temperatura y humedad cada **15 segundos**.
 - Publica el número de personas en cada entrada o salida detectada por los dos sensores IR.
