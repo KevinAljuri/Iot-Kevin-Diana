@@ -19,6 +19,7 @@ El sistema mide y controla:
 | Personas en el aula (entradas/salidas) | 2 sensores IR | `personas` |
 | LED rojo (control remoto) | LED | `led-rojo` |
 | Buzzer / zumbador (control remoto) | Buzzer | `buzzer` |
+       TABLA 1. variables.
 
 **Lógica local del ESP32:** si el aforo supera 5 personas se enciende el LED rojo y suena el buzzer, si no, permanece el LED verde. El LED rojo y el buzzer también se pueden activar a mano desde los interruptores del dashboard.
 
@@ -32,7 +33,7 @@ El sistema mide y controla:
 | `humedad`  mayor que 60 | Correo electrónico |
 
 ---
-
+ TABLA 2. CONDICIONES DE IFTTT.
 ## 2. Diagrama de conexión
 
 Pines usados en el ESP32 DevKit:
@@ -46,8 +47,9 @@ Pines usados en el ESP32 DevKit:
 | LED verde | GPIO 19 | Con resistencia en serie |
 | LED rojo | GPIO 21 | Con resistencia en serie |
 | Buzzer | GPIO 22 | Salida digital |
-
+    TABLA 3. Pins ESP32.
 ```
+
                        ┌──────────────────┐
   IR A  ───────────────┤ GPIO 17          │
   IR B  ───────────────┤ GPIO 18          │
@@ -62,7 +64,7 @@ Pines usados en el ESP32 DevKit:
                                 ▼
                          Adafruit IO (MQTT)
 ```
-
+ DIAGRAMA 1. Diagrama de conexión del sensor al ESP32.
 
 **Divisor de voltaje del LDR:** el LDR se conecta en serie con una resistencia fija entre 3.3 V y GND. El punto medio va al GPIO 32. Al cambiar la luz cambia el voltaje que lee el ADC (0 a 4095).
 
@@ -80,7 +82,7 @@ Sensor → ESP32 → Adafruit IO → IFTTT → Notificación push
 4. **IFTTT:** el applet usa el trigger *Monitor a feed on Adafruit IO* (tipo *polling*). Cada vez que valida un dato nuevo que cumple la condición, dispara la acción.
 5. **Notificación push:** IFTTT envía la alerta a la app instalada en el celular.
 
-**Observación sobre los tiempos:** el trigger de Adafruit en IFTTT es de tipo *polling* (IFTTT consulta el feed cada cierto tiempo, no recibe el dato al instante). En las pruebas, las 9 notificaciones acumuladas llegaron juntas a la 1:18 p. m., aunque los datos ya estaban en el feed desde antes. El sistema funciona, pero el plan gratuito de IFTTT agrupa y retrasa las notificaciones.
+**Observación sobre los tiempos:** el trigger de Adafruit en IFTTT consulta el feed cada cierto tiempo, no recibe el dato al instante. En las pruebas, las 9 notificaciones acumuladas llegaron juntas a la 1:18 p. m., aunque los datos ya estaban en el feed desde antes. El sistema funciona, pero el plan gratuito de IFTTT agrupa y retrasa las notificaciones para que se presenten cada hora.
 
 ---
 
@@ -89,23 +91,26 @@ Sensor → ESP32 → Adafruit IO → IFTTT → Notificación push
 
 ### 4.1 Dashboard de Adafruit IO
 ![Dashboard de Adafruit IO](evidencias/dashboard_adafruit.png)
+FIGURA 1. Dashboard adafruit.
 
 Dashboard *Control Aula B192* con temperatura, personas, humedad, luminosidad y los interruptores del zumbador y del LED rojo.
 
 ### 4.2 Gráfico histórico (Line Chart)
 ![Gráfico histórico de luminosidad](evidencias/grafico_historico.png)
+FIGURA 2. Grafico histórico.
 
-Line Chart del feed `luminosidad`, con picos y valles a lo largo del tiempo.
+Line Chart del feed `luminosidad`, en el cual se logran ver los picos y valles a lo largo del tiempo al cambio de luz.
 
 ### 4.3 Applet de IFTTT configurado
 ![Applet de IFTTT](evidencias/applet_ifttt.png)
+FIGURA 3. Applet de IFTTT.
 
 Applet *"If Data on luminosidad feed is less than 100, then Send a notification from the IFTTT app"* en estado **Connected**.
 
 ### 4.4 Notificación push recibida
 ![Notificación push](evidencias/notificacion_push.png)
-
-Captura del celular con la alerta recibida (hora visible).
+FIGURA 4. Notificación push.
+En la figura 4, se logra ver la captura del celular con la alerta recibida sobre que la luminosidad en el aula es muy reducida.
 
 ---
 
@@ -129,15 +134,13 @@ Los pasos para crearlos están en `informe_tecnico.md`.
 
 Además de las notificaciones push, se configuró un applet que avisa **por correo electrónico** cuando la humedad llega a un nivel de peligro.
 
-- **Trigger (This):** Adafruit → *Monitor a feed* → feed `humedad` → condición **[menor que 40 %]** (coincide con `HUM_MIN` del código).
+- **Trigger (This):** Adafruit → *Monitor a feed* → feed `humedad` → condición **[mayor que 60 %]**
 - **Acción (That):** correo electrónico con el valor actual de humedad.
 
 | Evidencia | Imagen |
 |---|---|
 | Correo recibido | ![Correo recibido](evidencias/extras/CorreoPush.jpeg) |
 | Lectura del correo | ![Lectura del correo](evidencias/extras/lecturaCorreo.jpeg) |
-
-> Confirmar el umbral real de humedad que usaron en el applet y ajustar el texto de arriba.
 
 ---
 
@@ -156,10 +159,10 @@ El código completo y comentado está en [`codigo/esp32_luminosidad.ino`](codigo
 
 > **Seguridad:** el archivo `config.h` contiene la contraseña del WiFi y la `AIO_KEY` de Adafruit IO. **No se sube al repositorio.** Se incluye un `config.example.h` con valores de ejemplo:
 > ```cpp
-> #define WIFI_SSID    "tu_red"
-> #define WIFI_PASS    "tu_clave"
-> #define AIO_USERNAME "tu_usuario"
-> #define AIO_KEY      "tu_aio_key"
+> #define WIFI_SSID    "red"
+> #define WIFI_PASS    "clave"
+> #define AIO_USERNAME "user"
+> #define AIO_KEY      "aio_key"
 > ```
 
 ---
