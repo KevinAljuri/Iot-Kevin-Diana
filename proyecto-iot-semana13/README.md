@@ -82,7 +82,7 @@ Sensor → ESP32 → Adafruit IO → IFTTT → Notificación push
 4. **IFTTT:** el applet usa el trigger *Monitor a feed on Adafruit IO* (tipo *polling*). Cada vez que valida un dato nuevo que cumple la condición, dispara la acción.
 5. **Notificación push:** IFTTT envía la alerta a la app instalada en el celular.
 
-**Observación sobre los tiempos:** el trigger de Adafruit en IFTTT consulta el feed cada cierto tiempo, no recibe el dato al instante. En las pruebas, las 9 notificaciones acumuladas llegaron juntas a la 1:18 p. m., aunque los datos ya estaban en el feed desde antes. El sistema funciona, pero el plan gratuito de IFTTT agrupa y retrasa las notificaciones para que se presenten cada hora.
+**Observación sobre los tiempos:** el trigger de Adafruit en IFTTT consulta el feed cada cierto tiempo, no recibe el dato al instante. En las pruebas, las 9 notificaciones acumuladas llegaron juntas a la 1:18 p. m., aunque los datos ya estaban en el feed desde antes. El sistema funciona, pero el plan gratuito de IFTTT agrupa y retrasa las notificaciones.
 
 ---
 
