@@ -169,10 +169,4 @@ El código completo y comentado está en [`codigo/esp32_luminosidad.ino`](codigo
 ---
 
 ## 8. Conclusiones
-
-- Con un ESP32, Adafruit IO e IFTTT se puede armar un flujo completo de monitoreo y alertas sin programar servidores ni envío de correos desde el microcontrolador.
-- La automatización evita que una persona esté pendiente del dashboard: el sistema avisa cuando ocurre una anomalía (poca luz, temperatura alta, aforo excedido, humedad en peligro).
-- Probamos que la cadena funciona de punta a punta, aunque el plan gratuito de IFTTT tiene retrasos y agrupa las notificaciones (trigger de tipo *polling*).
-- Publicar datos cada 10 a 15 segundos es importante, porque IFTTT evalúa cada dato nuevo. Si se publica muy seguido y la condición se cumple siempre, se generan muchas notificaciones repetidas.
-- El correo electrónico es una alternativa más confiable para alertas críticas.
-- Mejoras posibles: aumentar el rendimiento con otro servicio de notificación (Telegram, webhooks) y calibrar el LDR para obtener valores reales en lux.
+Se demostró la viabilidad de implementar un flujo completo de monitoreo y alertas con un ESP32, Adafruit IO e IFTTT sin necesidad de programar servidores ni gestionar envíos de correos desde el microcontrolador. Esta automatización optimiza la supervisión al notificar automáticamente cualquier anomalía (poca luz, temperatura alta, aforo excedido o humedad crítica), evitando la vigilancia constante del dashboard. Aunque se probó el correcto funcionamiento de la cadena de punta a punta, el plan gratuito de IFTTT presenta retrasos. Por eso, se determinó que es bueno publicar datos cada 10 o 15 segundos para evitar alertas repetidas cuando una condición se cumple de forma continua. Finalmente, el correo electrónico se perfila como una alternativa más confiable para eventos críticos, planteando como mejoras futuras la migración a servicios en tiempo real como Telegram.
