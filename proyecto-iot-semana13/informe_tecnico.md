@@ -23,7 +23,7 @@ Construir un flujo completo de IoT que capture datos del aula con un ESP32, los 
 
 ### 3.1 Conexión del sensor y lectura de datos
 
-El LDR se conectó a un divisor de voltaje y su punto medio va al GPIO 32 (entrada ADC). Las lecturas se imprimen por el monitor serial y varían al cubrir o descubrir el sensor. El ESP32 entrega valores crudos del ADC (0 a 4095), no lux: un valor cercano a 0 equivale a oscuridad y uno alto a luz intensa. Los demás pines están en la Tabla 3 del `README.md`.
+El LDR se conectó a un divisor de voltaje y su punto medio va al GPIO 32 (entrada ADC). Las lecturas se imprimen por el monitor serial y varían al cubrir o descubrir el sensor. El ESP32 entrega valores crudos del ADC (0 a 4095), un valor cercano a 0 equivale a oscuridad y uno alto a luz intensa. Los demás pines están en la Tabla 3 del `README.md`.
 
 ### 3.2 Configuración de Adafruit IO
 
