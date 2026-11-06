@@ -65,8 +65,8 @@ Cada applet sigue el modelo *Trigger–Action* (This → That).
 
 ### 5.1 Applet de luminosidad (actividad principal)
 
-1. **Crear el applet.** En ifttt.com, se entra a *Create*. Se pulsa **This** para configurar el disparador (`extra/this.jpeg`).
-2. **Elegir el servicio.** Se busca **Adafruit** y se selecciona el trigger *Monitor a feed on Adafruit IO* (`extra/seleccionAdafruit.jpeg`).
+1. **Crear el applet.** En ifttt.com, se entra a *Create*. Se pulsa **This** para configurar el disparador ![Crear applet](extra/this.jpeg).
+2. **Elegir el servicio.** Se busca **Adafruit** y se selecciona el trigger *Monitor a feed on Adafruit IO* ![Elegir servicio](extra/seleccionAdafruit.jpeg).
 3. **Definir la condición.** Se elige el feed `luminosidad`, el operador **Less than** y el valor **100** (`extra/llenarValores.jpeg`).
 4. **Configurar la acción.** Se pulsa **That** (`extra/that.jpeg`), se busca el servicio **Notifications** y se elige *Send a notification from the IFTTT app* (`extra/selectNotify.jpeg`).
 5. **Escribir el mensaje.** Se personaliza el texto con el valor recibido del feed (`extra/CambioTexto.jpeg`).
