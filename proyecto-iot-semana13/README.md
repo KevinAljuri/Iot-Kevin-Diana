@@ -63,8 +63,6 @@ Pines usados en el ESP32 DevKit (según el código):
                          Adafruit IO (MQTT)
 ```
 
-> Pendiente: agregar aquí la imagen del esquema de conexión (Fritzing o foto del montaje) si se tiene.
-> `![Montaje físico](evidencias/extras/montaje.jpeg)`
 
 **Divisor de voltaje del LDR:** el LDR se conecta en serie con una resistencia fija entre 3.3 V y GND. El punto medio va al GPIO 32. Al cambiar la luz cambia el voltaje que lee el ADC (0 a 4095).
 
