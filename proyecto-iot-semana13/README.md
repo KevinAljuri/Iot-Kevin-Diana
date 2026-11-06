@@ -35,7 +35,7 @@ El sistema mide y controla:
 
 ## 2. Diagrama de conexión
 
-Pines usados en el ESP32 DevKit (según el código):
+Pines usados en el ESP32 DevKit:
 
 | Componente | Pin ESP32 | Nota |
 |---|---|---|
