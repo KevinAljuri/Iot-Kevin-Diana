@@ -2,7 +2,7 @@
 
 **Autores:** Kevin Aljuri y Diana Beltrán
 **Actividad:** Proyecto IoT – Semana 13 (ESP32 + Adafruit IO + IFTTT)
-**Fecha de las pruebas:** 5 de noviembre de 2026
+
 
 ---
 
