@@ -1,0 +1,39 @@
+services:
+  influxdb:
+    image: influxdb:2
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8086:8086"
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUX_USER:?Configura INFLUX_USER en .env}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUX_PASSWORD:?Configura INFLUX_PASSWORD en .env}
+      DOCKER_INFLUXDB_INIT_ORG: ${INFLUX_ORG:-uts}
+      DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUX_BUCKET:-aulas}
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUX_TOKEN:?Configura INFLUX_TOKEN en .env}
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+      - influxdb_config:/etc/influxdb2
+  grafana:
+    image: grafana/grafana:12.2.0
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:?Configura GRAFANA_PASSWORD en .env}
+      GF_SMTP_ENABLED: "true"
+      GF_SMTP_HOST: "smtp.gmail.com:587"
+      GF_SMTP_USER: ${GMAIL_ADDRESS}
+      GF_SMTP_PASSWORD: ${GMAIL_APP_PASSWORD}
+      GF_SMTP_FROM_ADDRESS: ${GMAIL_ADDRESS}
+      GF_SMTP_FROM_NAME: "Alertas IoT Aula B192"
+      GF_SMTP_STARTTLS_POLICY: "MandatoryStartTLS"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - influxdb
+volumes:
+  influxdb_data:
+  influxdb_config:
+  grafana_data:
