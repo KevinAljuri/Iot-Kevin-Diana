@@ -1,5 +1,5 @@
 
-# Sistema IoT para el control de entradas y salidas en aulas de clase
+# Sistema IoT para el control de aulas — Semana 14
 
 **Unidades Tecnológicas de Santander (UTS)**
 
@@ -9,245 +9,180 @@
 **Docente:** Eliecer Montero Ojeda  
 **Año:** 2026
 
-## 1. Descripción del proyecto
+## 1. Introducción
 
-El proyecto consiste en un sistema IoT para el control de entradas y salidas de personas en un aula de clase, utilizando un ESP32 y diferentes sensores.
+En la semana 13 se conectó el ESP32 con Adafruit IO e IFTTT para mostrar las mediciones del aula y recibir avisos cuando se superaban ciertos valores.
 
-El sistema permite medir temperatura, humedad, luminosidad y cantidad de personas presentes. Además, utiliza un LED verde, un LED rojo y un buzzer para indicar las condiciones del aforo.
+En esta semana 14 se continuó con el mismo montaje, pero se añadió una base de datos local para conservar los datos históricos y analizarlos con mayor detalle.
 
-Durante la semana 13 se implementó la comunicación con Adafruit IO y las automatizaciones mediante IFTTT. En la semana 14 se amplió el proyecto incorporando almacenamiento avanzado con InfluxDB, visualización histórica con Grafana y alertas inteligentes mediante correo electrónico.
+Para esto se utilizaron Python, InfluxDB y Grafana, sin cambiar el funcionamiento principal de los sensores ni los controles del LED rojo y el buzzer.
 
 ## 2. Objetivo
 
-Implementar un sistema de almacenamiento local que permita conservar y consultar las mediciones enviadas por el ESP32 a Adafruit IO, utilizando Python e InfluxDB para almacenar los datos y Grafana para visualizar su comportamiento histórico.
+Implementar un sistema de almacenamiento avanzado que permita guardar y consultar las mediciones del aula y comprobar que los datos permanecen almacenados después de reiniciar el servidor local.
 
-## 3. Materiales utilizados
+## 3. Componentes y herramientas
 
-- ESP32 DevKit.
-- Sensor DHT11 para temperatura y humedad.
-- Sensor LDR para luminosidad.
-- Dos sensores infrarrojos para entradas y salidas.
-- LED verde y LED rojo.
-- Buzzer.
+El montaje utiliza:
+
+- ESP32 DevKit con WiFi.
+- Sensor DHT11: temperatura y humedad.
+- Sensor LDR: luminosidad.
+- Dos sensores infrarrojos: entradas y salidas.
+- LED verde, LED rojo y buzzer.
 - Protoboard y cables de conexión.
-- Computador con Windows.
-- Conexión WiFi.
 
-## 4. Herramientas utilizadas
+Las herramientas utilizadas son:
 
-**Adafruit IO:** recibe los datos enviados por el ESP32 mediante MQTT.
+- **Adafruit IO:** recibe las mediciones mediante MQTT.
+- **Python:** consulta los datos de Adafruit IO.
+- **InfluxDB:** almacena las mediciones históricas.
+- **Grafana:** permite visualizar y analizar los datos.
+- **Docker Desktop:** ejecuta los servicios locales.
+- **Gmail:** recibe las alertas de Grafana.
 
-**Python:** consulta los feeds de Adafruit IO y almacena las mediciones en InfluxDB.
+## 4. Funcionamiento del sistema
 
-**InfluxDB:** base de datos local utilizada para conservar registros históricos con su fecha y hora.
+El flujo general es:
 
-**Grafana:** permite visualizar indicadores, gráficas históricas, tablas estadísticas y configurar alertas.
+ESP32 → Adafruit IO → Python → InfluxDB → Grafana → Gmail
 
-**Docker Desktop:** permite ejecutar InfluxDB y Grafana mediante contenedores.
+El ESP32 publica temperatura, humedad y luminosidad aproximadamente cada 15 segundos. El número de personas se publica al detectar entradas y salidas y al reconectarse a MQTT.
 
-**Gmail:** recibe las notificaciones generadas por las alertas de Grafana.
+Python consulta los cuatro feeds de Adafruit IO y almacena las mediciones en el bucket `aulas` de InfluxDB.
 
-## 5. Funcionamiento del sistema
+Grafana consulta esos registros para mostrar indicadores, gráficas históricas, estadísticas y alertas.
 
-El funcionamiento general es:
+Los controles del LED rojo y del buzzer continúan funcionando mediante Adafruit IO.
 
-ESP32 → Adafruit IO → Python → InfluxDB → Grafana
+## 5. Instalación y ejecución
 
-El ESP32 publica los datos ambientales aproximadamente cada 15 segundos en Adafruit IO. El conteo de personas se publica cuando se registra una entrada o salida y al reconectar MQTT.
+Se utilizó un computador con Windows, Python y Docker Desktop.
 
-Posteriormente, un script de Python consulta los feeds y almacena las lecturas en InfluxDB, conservando el valor, la fecha, la hora, el sensor y el aula.
+Los contenedores se configuran mediante `compose.yaml`.
 
-Grafana consulta esta base de datos para representar la información y analizar su comportamiento a lo largo del tiempo.
-
-Los controles del LED rojo y el buzzer continúan funcionando desde Adafruit IO.
-
-## 6. Variables almacenadas
-
-Se utilizan cuatro feeds principales:
-
-| Variable | Sensor | Unidad |
-|---|---|---|
-| Temperatura | DHT11 | °C |
-| Humedad | DHT11 | % |
-| Luminosidad | LDR | ADC (0–4095) |
-| Personas | Sensores IR | Personas |
-
-En InfluxDB los registros se almacenan en el bucket `aulas`, utilizando la etiqueta `AULA-101` para identificar el espacio monitorizado.
-
-## 7. Instalación y configuración
-
-Para ejecutar el proyecto se necesita Python y Docker Desktop.
-
-### 7.1. Configurar las credenciales
-
-Crear un archivo `.env` a partir de `.env.example`.
-
-En este archivo se configuran las credenciales privadas de Adafruit IO, InfluxDB y Grafana.
-
-Las credenciales reales no se incluyen en el repositorio por seguridad.
-
-### 7.2. Iniciar Docker
-
-Abrir Docker Desktop y posteriormente PowerShell en la carpeta donde se encuentra `compose.yaml`.
-
-Ejecutar:
+Para iniciar InfluxDB y Grafana:
 
 ```powershell
 docker compose up -d
-```
-
-Verificar los servicios:
-
-```powershell
 docker compose ps
 ```
 
-Los servicios se pueden consultar desde:
+Direcciones locales:
 
 - InfluxDB: http://localhost:8086
 - Grafana: http://localhost:3000
 
-### 7.3. Instalar las dependencias de Python
-
-En PowerShell:
+Para instalar las dependencias de Python:
 
 ```powershell
 py -m venv .venv
-```
-
-```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-Estos comandos se utilizan durante la instalación inicial.
+Las credenciales se configuran en un archivo privado `.env`, utilizando `.env.example` como referencia.
 
-### 7.4. Ejecutar el almacenamiento
-
-Para realizar una sincronización de prueba:
-
-```powershell
-.\.venv\Scripts\python.exe scripts\ejecutar.py --una-vez
-```
-
-Para ejecutar la sincronización continua:
+Para comenzar la sincronización:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts\ejecutar.py
 ```
 
-El programa consulta las cuatro variables y almacena sus lecturas en InfluxDB. También calcula periódicamente el umbral dinámico de temperatura.
+El programa consulta los feeds, almacena las lecturas en InfluxDB y calcula el umbral dinámico de temperatura.
 
-La terminal debe permanecer abierta mientras se utilice el sistema.
+## 6. Evidencias de funcionamiento
 
-## 8. Verificación del almacenamiento
+### 6.1. Servicios de Docker
 
-En InfluxDB se utiliza Data Explorer para consultar las mediciones guardadas.
+Se configuraron los contenedores de InfluxDB y Grafana y se comprobó su funcionamiento con `docker compose ps`.
 
-Se comprueba que los registros de temperatura, humedad, luminosidad y personas se encuentran almacenados en el bucket `aulas`.
+![Figura 1. Servicios de InfluxDB y Grafana](docs/01_docker.jpg)
 
-Para demostrar la persistencia se reinicia el servicio con:
+### 6.2. Almacenamiento mediante Python
+
+El script procesa las mediciones de temperatura, humedad, luminosidad y personas, conservando sus fechas y horas en InfluxDB.
+
+![Figura 2. Script de almacenamiento en Python](docs/02_python.jpg)
+
+### 6.3. Datos almacenados en InfluxDB
+
+Desde Data Explorer se consultaron los registros disponibles en el bucket `aulas`, identificados mediante la etiqueta `AULA-101`.
+
+![Figura 3. Datos almacenados en InfluxDB](docs/03_influxdb.jpg)
+
+### 6.4. Verificación de persistencia
+
+Se reinició el servicio mediante el comando:
 
 ```powershell
 docker compose restart influxdb
 ```
 
-Después del reinicio se vuelve a consultar la base de datos y se verifica que las mediciones anteriores permanecen almacenadas.
+![Figura 4. Reinicio de InfluxDB](docs/04_restart.jpg)
 
-Los volúmenes de Docker permiten conservar la información al detener o reiniciar los contenedores.
+Posteriormente, se consultó nuevamente la base de datos y se comprobó que los registros continuaban disponibles.
 
-## 9. Dashboard de Grafana
+![Figura 5. Persistencia después del reinicio](docs/05_influxdbRestart.jpg)
 
-Se creó un dashboard llamado:
+### 6.5. Dashboard de Grafana
 
-**Control Inteligente de Aula B192 - Semana 14**
+Se creó el dashboard **Control Inteligente de Aula B192 - Semana 14**, que incluye:
 
-El dashboard incluye:
-
-- Indicador de temperatura actual.
-- Indicador de humedad.
-- Indicador de luminosidad.
-- Indicador de personas presentes.
+- Indicadores de temperatura, humedad, luminosidad y personas.
 - Gráficas históricas de las cuatro variables.
-- Tendencia de temperatura de las últimas 24 horas.
 - Tabla de promedio, mínimo y máximo diario.
-- Panel preparado para comparar temperaturas entre aulas.
+- Panel de comparación de temperatura entre aulas.
 
-Actualmente se dispone de mediciones de AULA-101. La comparación con otra aula queda pendiente hasta contar con una segunda serie de datos reales.
+![Figura 6. Dashboard de Grafana](docs/06_dashboard.jpg)
 
-El dashboard exportado se encuentra en la carpeta `dashboards/`.
+Por el momento se tienen mediciones identificadas como `AULA-101`. La comparación con una segunda aula queda como una limitación de la práctica.
 
-## 10. Alertas inteligentes
+### 6.6. Alertas del sistema
 
-Se implementó un script de Python que calcula un umbral dinámico de temperatura a partir del histórico disponible de la última semana.
+Se configuró una alerta dinámica de temperatura utilizando el promedio y dos desviaciones estándar del histórico disponible.
 
-La fórmula utilizada es:
+**Umbral dinámico = Promedio + 2 × desviación estándar**
 
-**Umbral = Promedio + 2 × Desviación estándar**
+Grafana evalúa la diferencia entre la temperatura actual y este umbral.
 
-También se calcula:
+También se crearon reglas para:
 
-**Exceso = Temperatura actual - Umbral**
+- Humedad elevada: mayor que 60 %.
+- Luminosidad baja: menor que 100 ADC.
+- Aforo excedido: más de 5 personas.
 
-Cuando el exceso es mayor que cero, Grafana puede activar una alerta.
+![Figura 7. Reglas de alerta de Grafana](docs/07_alerta.jpg)
 
-La regla de temperatura fue configurada con una evaluación cada minuto y un contacto de correo electrónico mediante Gmail.
+Las alertas se vincularon con un contacto de correo electrónico. Durante las pruebas se comprobó la recepción de una notificación por luminosidad baja.
 
-Durante las pruebas se comprobó la activación de la alerta y la recepción de correos.
+![Figura 8. Correo de alerta recibido](docs/08_correo.jpg)
 
-El sistema también permite configurar reglas adicionales de humedad, luminosidad y aforo, utilizando los datos que ya están almacenados en InfluxDB.
+## 7. Archivos del proyecto
 
-Las reglas de alerta y las credenciales del servicio de correo se configuran localmente en Grafana. No forman parte automáticamente del JSON exportado del dashboard.
+La carpeta `scripts/` contiene:
 
-## 11. Evidencias
+- `comun.py`: configuración compartida y conexión con InfluxDB.
+- `ingesta.py`: lectura de los feeds de Adafruit IO y almacenamiento.
+- `alertas.py`: cálculo del umbral dinámico de temperatura.
+- `ejecutar.py`: ejecución periódica de la sincronización y las alertas.
 
-En la carpeta `docs/` se incluyen capturas de:
+La carpeta `dashboards/` contiene el dashboard exportado como JSON y las consultas Flux utilizadas para construir los paneles.
 
-1. Servicios de InfluxDB y Grafana ejecutándose en Docker.
-2. Script de Python procesando las cuatro variables.
-3. Registros almacenados en InfluxDB.
-4. Persistencia de los datos después del reinicio.
-5. Dashboard de Grafana.
-6. Alerta de temperatura activada.
-7. Correo recibido desde Grafana.
+La carpeta `docs/` contiene las capturas de las pruebas realizadas.
 
-Estas evidencias permiten comprobar el funcionamiento del almacenamiento y la visualización del sistema.
+## 8. Dificultades y limitaciones
 
-## 12. Limitaciones encontradas
+Durante la configuración se presentaron dificultades con las credenciales iniciales de InfluxDB y con la creación de las expresiones de alerta en Grafana.
 
-Durante el desarrollo se presentaron dificultades en la configuración inicial de las contraseñas de InfluxDB y en la conexión entre las herramientas.
+También se observaron algunas lecturas atípicas de temperatura, que deben revisarse antes de sacar conclusiones sobre las condiciones ambientales.
 
-También se observaron algunas lecturas atípicas de temperatura durante las pruebas, por lo que es importante revisar la calidad de los datos antes de interpretar los promedios y las alertas.
+El sistema utiliza actualmente un solo montaje, por lo que no se realizó una comparación real entre dos aulas.
 
-El sistema utiliza actualmente un solo prototipo y registra mediciones identificadas como AULA-101.
+Para continuar almacenando nuevas mediciones, es necesario mantener el computador, los servicios de Docker y el script de Python funcionando.
 
-Además, para mantener la sincronización con InfluxDB, el computador debe estar encendido y el programa de Python en ejecución.
+## 9. Cómo detener y volver a iniciar el sistema
 
-## 13. Cómo iniciar nuevamente el proyecto
-
-Después de encender el computador:
-
-1. Abrir Docker Desktop.
-2. Conectar y encender el ESP32.
-3. Abrir PowerShell en la carpeta del proyecto.
-4. Ejecutar:
-
-```powershell
-docker compose up -d
-```
-
-5. Iniciar Python:
-
-```powershell
-.\.venv\Scripts\python.exe scripts\ejecutar.py
-```
-
-6. Abrir Grafana en http://localhost:3000 y consultar el dashboard.
-
-No es necesario volver a instalar las dependencias ni crear el dashboard.
-
-## 14. Cómo detener el proyecto
-
-Para detener Python se utiliza `Ctrl + C` en su terminal.
+Para detener la sincronización de Python se utiliza `Ctrl + C` en su terminal.
 
 Después se ejecuta:
 
@@ -255,16 +190,32 @@ Después se ejecuta:
 docker compose stop
 ```
 
-Este procedimiento detiene los servicios sin borrar los datos guardados.
+Para iniciar nuevamente el sistema otro día:
 
-No se debe utilizar `docker compose down -v`, debido a que esta opción elimina los volúmenes del proyecto.
+1. Abrir Docker Desktop.
+2. Conectar el ESP32.
+3. Abrir PowerShell en la carpeta del proyecto.
+4. Ejecutar `docker compose up -d`.
+5. Ejecutar `.\.venv\Scripts\python.exe scripts\ejecutar.py`.
+6. Abrir Grafana y consultar el dashboard.
 
-## 15. Conclusiones
+Los registros de InfluxDB y la configuración del dashboard se conservan al detener los servicios normalmente.
 
-Se logró integrar el sistema IoT desarrollado anteriormente con una base de datos local para conservar las mediciones obtenidas por los sensores.
+No se debe ejecutar `docker compose down -v`, porque elimina los volúmenes de almacenamiento.
 
-El uso de Python e InfluxDB permitió almacenar los datos de temperatura, humedad, luminosidad y personas, mientras que Grafana facilitó su visualización mediante indicadores, gráficas y tablas históricas.
+## 10. Conclusiones
 
-También se implementó una alerta dinámica de temperatura con notificación por correo electrónico, permitiendo identificar condiciones que se desvían del comportamiento registrado.
+Se logró integrar el sistema IoT desarrollado anteriormente con InfluxDB para almacenar las mediciones de temperatura, humedad, luminosidad y personas.
 
-Finalmente, se comprobó que los datos permanecen almacenados después de reiniciar InfluxDB, cumpliendo el objetivo principal de almacenamiento avanzado de la semana 14.
+La consulta de los registros después de reiniciar el servicio permitió comprobar la persistencia del almacenamiento local.
+
+Grafana facilitó la visualización de los datos mediante indicadores, gráficas y estadísticas, así como la configuración de alertas con notificaciones por Gmail.
+
+Con esta actividad se complementó el trabajo de la semana 13, pasando de visualizar los valores del momento a conservarlos para analizarlos posteriormente.
+
+## 11. Referencias
+
+- Adafruit IO: https://io.adafruit.com
+- InfluxDB: https://docs.influxdata.com/
+- Grafana: https://grafana.com/docs/
+- Proyecto anterior: https://github.com/KevinAljuri/Iot-Kevin-Diana/tree/main/proyecto-iot-semana13
