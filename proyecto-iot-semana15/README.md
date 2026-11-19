@@ -251,8 +251,6 @@ La carpeta **`codigo/`** está preparada para incluir el programa del ESP32 que 
 
 El archivo `dashboards/dashboard_grafana.json` debe corresponder a la **exportación final** del dashboard de Grafana, con los paneles y la variable de aula guardados. Las reglas de alertas se administran por separado en Grafana y no deben darse por exportadas automáticamente dentro de ese JSON.
 
-**Seguridad:** no publicar el `.env`, `config.h` con credenciales reales, tokens, contraseñas de WiFi o Gmail, ni datos personales sensibles en capturas.
-
 ## 9. Cómo volver a iniciar el proyecto existente
 
 No es necesario reinstalar las herramientas para volver a utilizar el proyecto. Con el ESP32 conectado y Docker Desktop abierto, desde la carpeta **operativa de semana 14** que contiene `compose.yaml`, ejecutamos:
