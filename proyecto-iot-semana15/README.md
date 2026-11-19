@@ -146,9 +146,9 @@ El Gauge se configuró con el valor llamado **`exceso`**, que representa la dife
 
 | Color | Condición del exceso | Interpretación |
 |---|---|---|
-| 🟢 Verde | Menor que −2 °C | Temperatura por debajo del límite. |
-| 🟡 Amarillo | Desde −2 °C hasta menos de 0 °C | Temperatura cercana al límite. |
-| 🔴 Rojo | 0 °C o más | Límite alcanzado o superado. |
+| Verde | Menor que −2 °C | Temperatura por debajo del límite. |
+| Amarillo | Desde −2 °C hasta menos de 0 °C | Temperatura cercana al límite. |
+| Rojo | 0 °C o más | Límite alcanzado o superado. |
 
 Por ejemplo, un valor de **−0,26 °C** significa que faltan 0,26 °C para llegar al umbral. **No significa que el aula tenga una temperatura negativa.** La regla real de alerta se activa cuando el exceso es *mayor que cero*.
 
